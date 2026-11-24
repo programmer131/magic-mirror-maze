@@ -1,8 +1,10 @@
 .venv/
+models/
 __pycache__/
 *.pyc
 .env
 config.json
+progress.json
 *.key
 *.apk
 .DS_Store
