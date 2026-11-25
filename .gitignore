@@ -4,7 +4,10 @@ __pycache__/
 *.pyc
 .env
 config.json
+assets/sounds/name_*.wav
 progress.json
+bear_progress.json
+activity_progress.json
 *.key
 *.apk
 .DS_Store

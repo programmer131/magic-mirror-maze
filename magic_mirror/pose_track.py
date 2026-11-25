@@ -9,9 +9,12 @@ from __future__ import annotations
 import sys
 import time
 from dataclasses import dataclass
+from pathlib import Path
 
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtGui import QImage
+
+from .player_tracking import PlayerTracker, calibrate_three
 
 cv2 = None
 np = None
@@ -37,6 +40,46 @@ class Body:
     x: float
     left_up: bool
     right_up: bool
+    player: int | None = None
+    left_visible: bool = True
+    right_visible: bool = True
+
+
+def camera_sources(camera: int | None, dev: Path = Path('/dev')) -> list[str]:
+    if camera is not None:
+        return [str(dev / f'video{camera}')]
+    by_id = dev / 'v4l' / 'by-id'
+    stable = sorted(p for p in by_id.glob('*-video-index0') if p.exists())
+    devices = sorted(dev.glob('video[0-9]*'))
+    return [str(p) for p in stable + devices]
+
+
+class CameraStream:
+    def __init__(self, opener):
+        self.opener = opener
+        self.capture = None
+        self.generation = 0
+
+    def read(self):
+        if self.capture is None:
+            self.capture = self.opener()
+            if self.capture is not None:
+                self.generation += 1
+        if self.capture is None:
+            return False, None
+        try:
+            ok, frame = self.capture.read()
+        except Exception:
+            ok, frame = False, None
+        if not ok or frame is None:
+            self.close()
+            return False, None
+        return True, frame
+
+    def close(self):
+        if self.capture is not None:
+            self.capture.release()
+            self.capture = None
 
 
 def _load() -> bool:
@@ -99,8 +142,10 @@ def bodies_from_result(result, geometry) -> list[Body]:
                 nose_x,
                 Body(
                     x=nose_x,
-                    left_up=left_seen and left_wrist[1] < left_shoulder[1] - 0.08,
-                    right_up=right_seen and right_wrist[1] < right_shoulder[1] - 0.08,
+                    left_up=left_seen and left_wrist[1] < left_shoulder[1] - 0.04,
+                    right_up=right_seen and right_wrist[1] < right_shoulder[1] - 0.04,
+                    left_visible=left_seen,
+                    right_visible=right_seen,
                 ),
                 joints,
             )
@@ -111,8 +156,8 @@ def bodies_from_result(result, geometry) -> list[Body]:
 
 def _draw(rgb, people) -> None:
     height, width = rgb.shape[:2]
-    for index, (_x, _body, joints) in enumerate(people):
-        color = COLORS[index % 3]
+    for _x, body, joints in people:
+        color = COLORS[body.player - 1] if body.player else (180, 180, 180)
         points = {}
         for joint_index, (x, y) in enumerate(joints):
             if x < -0.05 or y < -0.05 or x > 1.05 or y > 1.05:
@@ -123,20 +168,26 @@ def _draw(rgb, people) -> None:
                 cv2.line(rgb, points[start], points[end], color, 8, cv2.LINE_AA)
         for joint_index in (15, 16):
             if joint_index in points:
-                cv2.circle(rgb, points[joint_index], 16, (255, 244, 194), -1, cv2.LINE_AA)
-                cv2.circle(rgb, points[joint_index], 10, color, -1, cv2.LINE_AA)
+                cv2.circle(rgb, points[joint_index], 16, color, -1, cv2.LINE_AA)
+                cv2.circle(rgb, points[joint_index], 16, (255, 255, 255), 2, cv2.LINE_AA)
 
 
 class PoseWorker(QThread):
     bodies_ready = Signal(object)
+    poses_ready = Signal(object)
     preview_ready = Signal(object)
     status_ready = Signal(str)
+    tracking_reset = Signal()
+    players_calibrated = Signal()
 
-    def __init__(self, camera: int, model) -> None:
+    def __init__(self, camera: int | None, model) -> None:
         super().__init__()
         self.camera = camera
         self.model = model
         self.running = True
+        self.reset_tracking = False
+        self.calibrate_for_three = False
+        self.require_three_players = False
         _load()
 
     def stop(self) -> None:
@@ -147,24 +198,32 @@ class PoseWorker(QThread):
             self.status_ready.emit("missing")
             return
         recognizer = self._recognizer()
-        capture = _open(self.camera)
-        if capture is None or not capture.isOpened():
-            self.status_ready.emit("missing")
-            return
-        try:
-            capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        except Exception:
-            pass
-        self.status_ready.emit("ok" if recognizer is not None else "keyboard")
+        stream = CameraStream(lambda: _open(self.camera))
         started = time.monotonic()
         last_stamp = 0
         warned = False
+        tracker = PlayerTracker()
+        generation = 0
+        last_counts = None
+        last_report = 0.0
         while self.running:
-            ok, frame = capture.read()
+            if self.reset_tracking:
+                tracker = PlayerTracker()
+                self.reset_tracking = False
+                self.tracking_reset.emit()
+            ok, frame = stream.read()
             if not ok or frame is None:
                 self.status_ready.emit("missing")
-                time.sleep(0.2)
+                self.bodies_ready.emit([])
+                self.poses_ready.emit([])
+                time.sleep(0.5)
                 continue
+            if stream.generation != generation:
+                generation = stream.generation
+                tracker = PlayerTracker()
+                if self.require_three_players:
+                    self.calibrate_for_three = True
+                self.tracking_reset.emit()
             frame = cv2.flip(frame, 1)
             rgb = np.ascontiguousarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             if recognizer is not None:
@@ -175,45 +234,79 @@ class PoseWorker(QThread):
                     image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(square))
                     result = recognizer.detect_for_video(image, stamp)
                     people = bodies_from_result(result, (pad_x, pad_y, side, width, height))
+                    positions = [item[1].x for item in people]
+                    if self.calibrate_for_three:
+                        assignments = calibrate_three(positions)
+                        if assignments is None:
+                            assignments = [None] * len(people)
+                            tracker.reassigned = False
+                        else:
+                            tracker = PlayerTracker()
+                            assignments = tracker.assign(positions)
+                            self.calibrate_for_three = False
+                            self.players_calibrated.emit()
+                    else:
+                        assignments = tracker.assign(positions)
+                    if tracker.reassigned:
+                        if self.require_three_players:
+                            self.calibrate_for_three = True
+                        self.tracking_reset.emit()
+                    for person, player in zip(people, assignments):
+                        person[1].player = player
+                    counts = (len(people), sum(player is not None for player in assignments))
+                    now = time.monotonic()
+                    if counts != last_counts and now - last_report >= 2.0:
+                        print(f"tracking: {counts[0]} detected, {counts[1]} assigned", file=sys.stderr)
+                        last_counts, last_report = counts, now
                     _draw(rgb, people)
-                    self.bodies_ready.emit([person[1] for person in people])
+                    self.poses_ready.emit([person[1] for person in people])
+                    self.bodies_ready.emit([person[1] for person in people if person[1].player is not None])
                 except Exception as exc:
                     if not warned:
                         print(f"pose: {type(exc).__name__}: {exc}", file=sys.stderr)
                         warned = True
                     self.bodies_ready.emit([])
+                    self.poses_ready.emit([])
             small = cv2.resize(rgb, (320, 180), interpolation=cv2.INTER_AREA)
             small = np.ascontiguousarray(small)
             preview = QImage(small.data, 320, 180, 320 * 3, QImage.Format.Format_RGB888).copy()
             self.preview_ready.emit(preview)
             self.status_ready.emit("ok" if recognizer is not None else "keyboard")
-        capture.release()
+        stream.close()
         if recognizer is not None:
             recognizer.close()
 
     def _recognizer(self):
         if mp is None or not self.model.is_file():
             return None
-        try:
-            options = vision.PoseLandmarkerOptions(
-                base_options=mp_python.BaseOptions(model_asset_path=str(self.model)),
-                running_mode=vision.RunningMode.VIDEO,
-                num_poses=3,
-                min_pose_detection_confidence=0.4,
-                min_pose_presence_confidence=0.4,
-                min_tracking_confidence=0.4,
-            )
-            return vision.PoseLandmarker.create_from_options(options)
-        except Exception as exc:
-            print(f"pose model: {type(exc).__name__}: {exc}", file=sys.stderr)
-            return None
+        for delegate in (mp_python.BaseOptions.Delegate.GPU, mp_python.BaseOptions.Delegate.CPU):
+            try:
+                options = vision.PoseLandmarkerOptions(
+                    base_options=mp_python.BaseOptions(model_asset_path=str(self.model), delegate=delegate),
+                    running_mode=vision.RunningMode.VIDEO,
+                    num_poses=3,
+                    min_pose_detection_confidence=0.4,
+                    min_pose_presence_confidence=0.4,
+                    min_tracking_confidence=0.4,
+                )
+                recognizer = vision.PoseLandmarker.create_from_options(options)
+                print(f"pose model: using {delegate.name}", file=sys.stderr)
+                return recognizer
+            except Exception as exc:
+                print(f"pose model {delegate.name}: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return None
 
 
-def _open(camera: int):
-    path = f"/dev/video{camera}"
-    for source, api in ((camera, cv2.CAP_V4L2), (path, cv2.CAP_V4L2), (camera, cv2.CAP_ANY)):
+def _open(camera: int | None):
+    for source in camera_sources(camera):
+        api = cv2.CAP_V4L2
         capture = cv2.VideoCapture(source, api)
         if capture.isOpened():
+            capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+            capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            print(f"camera: {source} {int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))}x{int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))}", file=sys.stderr)
             return capture
         capture.release()
     return None

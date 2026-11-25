@@ -1,0 +1,702 @@
+[
+  {
+    "picture": "book",
+    "word": "كتاب",
+    "roman": "kitaab",
+    "meaning": "Book",
+    "gender": "m"
+  },
+  {
+    "picture": "pencil",
+    "word": "قلم رصاص",
+    "roman": "qalam rasaas",
+    "meaning": "Pencil",
+    "gender": "m"
+  },
+  {
+    "picture": "door",
+    "word": "باب",
+    "roman": "baab",
+    "meaning": "Door",
+    "gender": "m"
+  },
+  {
+    "picture": "house",
+    "word": "بيت",
+    "roman": "bayt",
+    "meaning": "House",
+    "gender": "m"
+  },
+  {
+    "picture": "chair",
+    "word": "كرسي",
+    "roman": "kursi",
+    "meaning": "Chair",
+    "gender": "m"
+  },
+  {
+    "picture": "key",
+    "word": "مفتاح",
+    "roman": "miftaah",
+    "meaning": "Key",
+    "gender": "m"
+  },
+  {
+    "picture": "pen",
+    "word": "قلم",
+    "roman": "qalam",
+    "meaning": "Pen",
+    "gender": "m"
+  },
+  {
+    "picture": "paper",
+    "word": "ورقة",
+    "roman": "waraqah",
+    "meaning": "Paper",
+    "gender": "f"
+  },
+  {
+    "picture": "notebook",
+    "word": "دفتر",
+    "roman": "daftar",
+    "meaning": "Notebook",
+    "gender": "m"
+  },
+  {
+    "picture": "schoolbag",
+    "word": "حقيبة",
+    "roman": "haqee bah",
+    "meaning": "School bag",
+    "gender": "f"
+  },
+  {
+    "picture": "ruler",
+    "word": "مسطرة",
+    "roman": "mistarah",
+    "meaning": "Ruler",
+    "gender": "f"
+  },
+  {
+    "picture": "eraser",
+    "word": "ممحاة",
+    "roman": "mimhaah",
+    "meaning": "Eraser",
+    "gender": "f"
+  },
+  {
+    "picture": "desk",
+    "word": "مكتب",
+    "roman": "maktab",
+    "meaning": "Desk",
+    "gender": "m"
+  },
+  {
+    "picture": "window",
+    "word": "نافذة",
+    "roman": "naafidhah",
+    "meaning": "Window",
+    "gender": "f"
+  },
+  {
+    "picture": "wall",
+    "word": "جدار",
+    "roman": "jidaar",
+    "meaning": "Wall",
+    "gender": "m"
+  },
+  {
+    "picture": "fan",
+    "word": "مروحة",
+    "roman": "mirwahah",
+    "meaning": "Fan",
+    "gender": "f"
+  },
+  {
+    "picture": "lamp",
+    "word": "مصباح",
+    "roman": "misbaah",
+    "meaning": "Lamp",
+    "gender": "m"
+  },
+  {
+    "picture": "bed",
+    "word": "سرير",
+    "roman": "sareer",
+    "meaning": "Bed",
+    "gender": "m"
+  },
+  {
+    "picture": "table",
+    "word": "طاولة",
+    "roman": "taawilah",
+    "meaning": "Table",
+    "gender": "f"
+  },
+  {
+    "picture": "clock",
+    "word": "ساعة",
+    "roman": "saa'ah",
+    "meaning": "Clock",
+    "gender": "f"
+  },
+  {
+    "picture": "apple",
+    "word": "تفاحة",
+    "roman": "tuffaahah",
+    "meaning": "Apple",
+    "gender": "f"
+  },
+  {
+    "picture": "banana",
+    "word": "موزة",
+    "roman": "mawzah",
+    "meaning": "Banana",
+    "gender": "f"
+  },
+  {
+    "picture": "orange",
+    "word": "برتقالة",
+    "roman": "burtuqaalah",
+    "meaning": "Orange",
+    "gender": "f"
+  },
+  {
+    "picture": "mango",
+    "word": "مانجو",
+    "roman": "maanju",
+    "meaning": "Mango",
+    "gender": "f"
+  },
+  {
+    "picture": "grapes",
+    "word": "عنب",
+    "roman": "inab",
+    "meaning": "Grapes",
+    "gender": "m"
+  },
+  {
+    "picture": "date",
+    "word": "تمرة",
+    "roman": "tamrah",
+    "meaning": "Date fruit",
+    "gender": "f"
+  },
+  {
+    "picture": "watermelon",
+    "word": "بطيخ",
+    "roman": "batteekh",
+    "meaning": "Watermelon",
+    "gender": "m"
+  },
+  {
+    "picture": "lemon",
+    "word": "ليمون",
+    "roman": "laymoon",
+    "meaning": "Lemon",
+    "gender": "m"
+  },
+  {
+    "picture": "strawberry",
+    "word": "فراولة",
+    "roman": "faraawilah",
+    "meaning": "Strawberry",
+    "gender": "f"
+  },
+  {
+    "picture": "pineapple",
+    "word": "أناناس",
+    "roman": "ananaas",
+    "meaning": "Pineapple",
+    "gender": "m"
+  },
+  {
+    "picture": "bread",
+    "word": "خبز",
+    "roman": "khubz",
+    "meaning": "Bread",
+    "gender": "m"
+  },
+  {
+    "picture": "milk",
+    "word": "حليب",
+    "roman": "haleeb",
+    "meaning": "Milk",
+    "gender": "m"
+  },
+  {
+    "picture": "water",
+    "word": "ماء",
+    "roman": "maa'",
+    "meaning": "Water",
+    "gender": "m"
+  },
+  {
+    "picture": "juice",
+    "word": "عصير",
+    "roman": "aseer",
+    "meaning": "Juice",
+    "gender": "m"
+  },
+  {
+    "picture": "egg",
+    "word": "بيضة",
+    "roman": "baydah",
+    "meaning": "Egg",
+    "gender": "f"
+  },
+  {
+    "picture": "cheese",
+    "word": "جبن",
+    "roman": "jubn",
+    "meaning": "Cheese",
+    "gender": "m"
+  },
+  {
+    "picture": "rice",
+    "word": "أرز",
+    "roman": "aruzz",
+    "meaning": "Rice",
+    "gender": "m"
+  },
+  {
+    "picture": "honey",
+    "word": "عسل",
+    "roman": "asal",
+    "meaning": "Honey",
+    "gender": "m"
+  },
+  {
+    "picture": "salt",
+    "word": "ملح",
+    "roman": "milh",
+    "meaning": "Salt",
+    "gender": "m"
+  },
+  {
+    "picture": "sugar",
+    "word": "سكر",
+    "roman": "sukkar",
+    "meaning": "Sugar",
+    "gender": "m"
+  },
+  {
+    "picture": "cat",
+    "word": "قطة",
+    "roman": "qittah",
+    "meaning": "Cat",
+    "gender": "f"
+  },
+  {
+    "picture": "dog",
+    "word": "كلب",
+    "roman": "kalb",
+    "meaning": "Dog",
+    "gender": "m"
+  },
+  {
+    "picture": "bird",
+    "word": "عصفور",
+    "roman": "usfoor",
+    "meaning": "Bird",
+    "gender": "m"
+  },
+  {
+    "picture": "rabbit",
+    "word": "أرنب",
+    "roman": "arnab",
+    "meaning": "Rabbit",
+    "gender": "m"
+  },
+  {
+    "picture": "horse",
+    "word": "حصان",
+    "roman": "hisaan",
+    "meaning": "Horse",
+    "gender": "m"
+  },
+  {
+    "picture": "lion",
+    "word": "أسد",
+    "roman": "asad",
+    "meaning": "Lion",
+    "gender": "m"
+  },
+  {
+    "picture": "elephant",
+    "word": "فيل",
+    "roman": "feel",
+    "meaning": "Elephant",
+    "gender": "m"
+  },
+  {
+    "picture": "bear",
+    "word": "دب",
+    "roman": "dubb",
+    "meaning": "Bear",
+    "gender": "m"
+  },
+  {
+    "picture": "fish",
+    "word": "سمكة",
+    "roman": "samakah",
+    "meaning": "Fish",
+    "gender": "f"
+  },
+  {
+    "picture": "butterfly",
+    "word": "فراشة",
+    "roman": "faraashah",
+    "meaning": "Butterfly",
+    "gender": "f"
+  },
+  {
+    "picture": "tree",
+    "word": "شجرة",
+    "roman": "shajarah",
+    "meaning": "Tree",
+    "gender": "f"
+  },
+  {
+    "picture": "flower",
+    "word": "زهرة",
+    "roman": "zahrah",
+    "meaning": "Flower",
+    "gender": "f"
+  },
+  {
+    "picture": "sun",
+    "word": "شمس",
+    "roman": "shams",
+    "meaning": "Sun",
+    "gender": "f"
+  },
+  {
+    "picture": "moon",
+    "word": "قمر",
+    "roman": "qamar",
+    "meaning": "Moon",
+    "gender": "m"
+  },
+  {
+    "picture": "star",
+    "word": "نجمة",
+    "roman": "najmah",
+    "meaning": "Star",
+    "gender": "f"
+  },
+  {
+    "picture": "cloud",
+    "word": "غيمة",
+    "roman": "ghaymah",
+    "meaning": "Cloud",
+    "gender": "f"
+  },
+  {
+    "picture": "rain",
+    "word": "مطر",
+    "roman": "matar",
+    "meaning": "Rain",
+    "gender": "m"
+  },
+  {
+    "picture": "mountain",
+    "word": "جبل",
+    "roman": "jabal",
+    "meaning": "Mountain",
+    "gender": "m"
+  },
+  {
+    "picture": "river",
+    "word": "نهر",
+    "roman": "nahr",
+    "meaning": "River",
+    "gender": "m"
+  },
+  {
+    "picture": "sea",
+    "word": "بحر",
+    "roman": "bahr",
+    "meaning": "Sea",
+    "gender": "m"
+  },
+  {
+    "picture": "shoe",
+    "word": "حذاء",
+    "roman": "hidhaa'",
+    "meaning": "Shoe",
+    "gender": "m"
+  },
+  {
+    "picture": "shirt",
+    "word": "قميص",
+    "roman": "qamees",
+    "meaning": "Shirt",
+    "gender": "m"
+  },
+  {
+    "picture": "trousers",
+    "word": "سروال",
+    "roman": "sirwaal",
+    "meaning": "Trousers",
+    "gender": "m"
+  },
+  {
+    "picture": "dress",
+    "word": "فستان",
+    "roman": "fustaan",
+    "meaning": "Dress",
+    "gender": "m"
+  },
+  {
+    "picture": "hat",
+    "word": "قبعة",
+    "roman": "qubba'ah",
+    "meaning": "Hat",
+    "gender": "f"
+  },
+  {
+    "picture": "sock",
+    "word": "جورب",
+    "roman": "jawrab",
+    "meaning": "Sock",
+    "gender": "m"
+  },
+  {
+    "picture": "coat",
+    "word": "معطف",
+    "roman": "mi'taf",
+    "meaning": "Coat",
+    "gender": "m"
+  },
+  {
+    "picture": "scarf",
+    "word": "وشاح",
+    "roman": "wishaah",
+    "meaning": "Scarf",
+    "gender": "m"
+  },
+  {
+    "picture": "handbag",
+    "word": "حقيبة يد",
+    "roman": "haqee bah yad",
+    "meaning": "Handbag",
+    "gender": "f"
+  },
+  {
+    "picture": "belt",
+    "word": "حزام",
+    "roman": "hizaam",
+    "meaning": "Belt",
+    "gender": "m"
+  },
+  {
+    "picture": "car",
+    "word": "سيارة",
+    "roman": "sayyaarah",
+    "meaning": "Car",
+    "gender": "f"
+  },
+  {
+    "picture": "bus",
+    "word": "حافلة",
+    "roman": "haafilah",
+    "meaning": "Bus",
+    "gender": "f"
+  },
+  {
+    "picture": "train",
+    "word": "قطار",
+    "roman": "qitaar",
+    "meaning": "Train",
+    "gender": "m"
+  },
+  {
+    "picture": "airplane",
+    "word": "طائرة",
+    "roman": "taa'irah",
+    "meaning": "Aeroplane",
+    "gender": "f"
+  },
+  {
+    "picture": "boat",
+    "word": "قارب",
+    "roman": "qaarib",
+    "meaning": "Boat",
+    "gender": "m"
+  },
+  {
+    "picture": "bicycle",
+    "word": "دراجة",
+    "roman": "darraajah",
+    "meaning": "Bicycle",
+    "gender": "f"
+  },
+  {
+    "picture": "truck",
+    "word": "شاحنة",
+    "roman": "shaahinah",
+    "meaning": "Truck",
+    "gender": "f"
+  },
+  {
+    "picture": "ship",
+    "word": "سفينة",
+    "roman": "safeenah",
+    "meaning": "Ship",
+    "gender": "f"
+  },
+  {
+    "picture": "helicopter",
+    "word": "مروحية",
+    "roman": "mirwahiyyah",
+    "meaning": "Helicopter",
+    "gender": "f"
+  },
+  {
+    "picture": "rocket",
+    "word": "صاروخ",
+    "roman": "saarookh",
+    "meaning": "Rocket",
+    "gender": "m"
+  },
+  {
+    "picture": "head",
+    "word": "رأس",
+    "roman": "ra's",
+    "meaning": "Head",
+    "gender": "m"
+  },
+  {
+    "picture": "face",
+    "word": "وجه",
+    "roman": "wajh",
+    "meaning": "Face",
+    "gender": "m"
+  },
+  {
+    "picture": "nose",
+    "word": "أنف",
+    "roman": "anf",
+    "meaning": "Nose",
+    "gender": "m"
+  },
+  {
+    "picture": "mouth",
+    "word": "فم",
+    "roman": "fam",
+    "meaning": "Mouth",
+    "gender": "m"
+  },
+  {
+    "picture": "eye",
+    "word": "عين",
+    "roman": "ayn",
+    "meaning": "Eye",
+    "gender": "f"
+  },
+  {
+    "picture": "ear",
+    "word": "أذن",
+    "roman": "udhun",
+    "meaning": "Ear",
+    "gender": "f"
+  },
+  {
+    "picture": "hand",
+    "word": "يد",
+    "roman": "yad",
+    "meaning": "Hand",
+    "gender": "f"
+  },
+  {
+    "picture": "foot",
+    "word": "قدم",
+    "roman": "qadam",
+    "meaning": "Foot",
+    "gender": "f"
+  },
+  {
+    "picture": "finger",
+    "word": "إصبع",
+    "roman": "isba'",
+    "meaning": "Finger",
+    "gender": "f"
+  },
+  {
+    "picture": "heart",
+    "word": "قلب",
+    "roman": "qalb",
+    "meaning": "Heart",
+    "gender": "m"
+  },
+  {
+    "picture": "ball",
+    "word": "كرة",
+    "roman": "kurah",
+    "meaning": "Ball",
+    "gender": "f"
+  },
+  {
+    "picture": "doll",
+    "word": "دمية",
+    "roman": "dumyah",
+    "meaning": "Doll",
+    "gender": "f"
+  },
+  {
+    "picture": "toy",
+    "word": "لعبة",
+    "roman": "lu'bah",
+    "meaning": "Toy",
+    "gender": "f"
+  },
+  {
+    "picture": "gift",
+    "word": "هدية",
+    "roman": "hadiyyah",
+    "meaning": "Gift",
+    "gender": "f"
+  },
+  {
+    "picture": "box",
+    "word": "صندوق",
+    "roman": "sundooq",
+    "meaning": "Box",
+    "gender": "m"
+  },
+  {
+    "picture": "cup",
+    "word": "كوب",
+    "roman": "koob",
+    "meaning": "Cup",
+    "gender": "m"
+  },
+  {
+    "picture": "plate",
+    "word": "طبق",
+    "roman": "tabaq",
+    "meaning": "Plate",
+    "gender": "m"
+  },
+  {
+    "picture": "spoon",
+    "word": "ملعقة",
+    "roman": "mil'aqah",
+    "meaning": "Spoon",
+    "gender": "f"
+  },
+  {
+    "picture": "phone",
+    "word": "هاتف",
+    "roman": "haatif",
+    "meaning": "Phone",
+    "gender": "m"
+  },
+  {
+    "picture": "computer",
+    "word": "حاسوب",
+    "roman": "haasoob",
+    "meaning": "Computer",
+    "gender": "m"
+  }
+]
