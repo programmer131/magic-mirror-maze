@@ -1,6 +1,7 @@
 import unittest
 import time
-from unittest.mock import Mock, patch
+import base64
+from unittest.mock import Mock, call, patch
 from pathlib import Path
 from PySide6.QtGui import QImageReader
 from PySide6.QtWidgets import QApplication
@@ -116,6 +117,56 @@ class ArabicTutorTests(unittest.TestCase):
         self.assertIn('submit_answer', [tool['name'] for tool in session['tools']])
         self.assertIn('set_players', [tool['name'] for tool in session['tools']])
         self.assertNotIn('secret', str(session))
+
+    def test_unexpected_connection_close_reports_error_instead_of_stale_listening(self):
+        worker = ArabicTutorWorker([])
+        worker._status = Mock()
+        socket = Mock()
+        socket.recv.return_value = ''
+        with patch.dict('os.environ', {'OPENAI_API_KEY': 'test-only-key'}), \
+             patch('websocket.create_connection', return_value=socket):
+            worker.run()
+        worker._status.assert_any_call('service_error')
+
+    def test_short_answer_immediately_after_tutor_is_not_dropped(self):
+        worker = ArabicTutorWorker([])
+        worker.speaking = False
+        worker.play_until = 10.0
+        worker._send = Mock()
+        speech = b'\x10\x01' * 2400
+        tutor_audio = b'\x20\x02' * 2400
+        chunks = [tutor_audio, speech, speech, speech, b'\0' * 4800]
+
+        class Stream:
+            def read(self, _size):
+                if chunks:
+                    return chunks.pop(0)
+                worker.stopping.set()
+                return b''
+
+        recorder = Mock()
+        recorder.stdout = Stream()
+        with patch('magic_mirror.arabic_tutor.subprocess.Popen', return_value=recorder), \
+             patch('magic_mirror.arabic_tutor.time.monotonic', side_effect=[9.95, 10.05, 10.15, 10.25, 10.36]):
+            worker._capture()
+        sent = b''.join(base64.b64decode(call.args[0]['audio']) for call in worker._send.call_args_list)
+        self.assertTrue(speech in sent)
+        self.assertFalse(tutor_audio in sent)
+
+    def test_network_failure_during_microphone_send_is_not_reported_as_mic_failure(self):
+        worker = ArabicTutorWorker([])
+        worker.speaking = False
+        worker.play_until = 0
+        worker._send = Mock(side_effect=OSError('connection lost'))
+        worker._status = Mock()
+        worker.stop = Mock()
+        recorder = Mock()
+        recorder.stdout.read.return_value = b'\0' * 4800
+        with patch('magic_mirror.arabic_tutor.subprocess.Popen', return_value=recorder), \
+             patch('magic_mirror.arabic_tutor.time.monotonic', return_value=10.0):
+            worker._capture()
+        worker._status.assert_any_call('service_error')
+        self.assertNotIn(call('microphone_error'), worker._status.call_args_list)
 
     def test_tutor_is_told_to_ask_in_urdu_without_giving_the_answer(self):
         instructions = session_update(['Amna', 'Maryam', 'Abdullah'])['session']['instructions']

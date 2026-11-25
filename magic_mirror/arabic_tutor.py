@@ -172,6 +172,7 @@ class ArabicTutorWorker(QThread):
     def _capture(self):
         try:
             self.recorder = subprocess.Popen(['pw-record', '--rate', '24000', '--channels', '1', '--format', 's16', '-'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0)
+            pending = bytearray()
             while not self.stopping.is_set():
                 chunk = self.recorder.stdout.read(4800)
                 if not chunk:
@@ -180,10 +181,27 @@ class ArabicTutorWorker(QThread):
                         self.stop()
                     break
                 with self.play_lock:
-                    muted = self.speaking or time.monotonic() < self.play_until + .35
-                if not muted:
-                    self._status('listening')
+                    speaking, play_until = self.speaking, self.play_until
+                now = time.monotonic()
+                if speaking or now < play_until:
+                    pending.clear()
+                    continue
+                if now < play_until + .35:
+                    pending.extend(chunk)
+                    if len(pending) > 24000:
+                        del pending[:-24000]
+                    continue
+                self._status('listening')
+                try:
+                    if pending:
+                        self._send({'type': 'input_audio_buffer.append', 'audio': base64.b64encode(pending).decode('ascii')})
+                        pending.clear()
                     self._send({'type': 'input_audio_buffer.append', 'audio': base64.b64encode(chunk).decode('ascii')})
+                except Exception:
+                    if not self.stopping.is_set():
+                        self._status('service_error')
+                        self.stop()
+                    return
         except Exception:
             if not self.stopping.is_set():
                 self._status('microphone_error')
@@ -288,6 +306,8 @@ class ArabicTutorWorker(QThread):
                 except websocket.WebSocketTimeoutException:
                     continue
                 if not message:
+                    if not self.stopping.is_set():
+                        self._status('service_error')
                     break
                 self._event(json.loads(message))
         except Exception:

@@ -1447,7 +1447,7 @@ class MazeWindow(QWidget):
             'missing_key': ('OpenAI API key needed. Set it and restart the game.', 'اوپن اے آئی کی چابی درکار ہے'),
             'microphone_error': ('Microphone unavailable. Check Ubuntu sound settings.', 'مائیک دستیاب نہیں ہے'),
             'audio_error': ('Audio playback unavailable. Check Ubuntu sound settings.', 'آواز دستیاب نہیں ہے'),
-            'service_error': ('Could not connect. Check the API key and internet.', 'کنکشن نہیں بن سکا'),
+            'service_error': ('Connection lost. Check the internet and restart the tutor.', 'کنکشن ختم ہو گیا، دوبارہ شروع کریں'),
             'camera_error': ('Could not release the camera. Press Esc and try again.', 'کیمرہ بند نہیں ہو سکا'),
         }
         title, urdu = labels.get(self.arabic_status, ('Getting ready…', 'تیار ہو رہے ہیں'))
